@@ -1,1 +1,165 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ACESSO VIP</title>
+<meta name="color-scheme" content="dark">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#000;--card:#0d0a0c;--pink:#ff2d95;--red:#ff1744;--gold:#e6c35c;--gold2:#fff1b8;--tx:#f5eef1;--mut:#a79aa1;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--tx);font:400 15px/1.55 Montserrat,system-ui,sans-serif;overflow-x:hidden;
+background-image:radial-gradient(ellipse at 15% 0%,rgba(255,45,149,.22),transparent 45%),radial-gradient(ellipse at 90% 30%,rgba(255,23,68,.16),transparent 50%)}
+header{text-align:center;padding:26px 18px 0}
+.logo{font:800 30px "Playfair Display",serif;letter-spacing:.2em;color:#fff;text-shadow:0 0 8px var(--pink),0 0 22px var(--pink),0 0 40px var(--red)}
+.logo b{color:var(--gold2);text-shadow:0 0 8px var(--gold),0 0 20px #b8892a}
+.hero{text-align:center;padding:34px 20px 20px;max-width:640px;margin:0 auto}
+.tag{display:inline-block;border:1px solid var(--gold);color:var(--gold2);font-size:11px;letter-spacing:.28em;padding:8px 16px;border-radius:99px;box-shadow:0 0 14px rgba(230,195,92,.3)}
+h1{font:800 clamp(34px,10vw,58px)/1.05 "Playfair Display",serif;margin:20px 0 14px}
+h1 span{color:var(--pink);text-shadow:0 0 18px rgba(255,45,149,.8)}
+.hero p{color:var(--mut)}
+.line{height:2px;width:120px;margin:22px auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 12px var(--gold)}
+.cards{display:grid;gap:22px;padding:26px 18px 46px;max-width:960px;margin:0 auto;grid-template-columns:1fr}
+.card{position:relative;background:linear-gradient(160deg,#150b11,var(--card) 60%);border-radius:24px;padding:28px 22px;border:1px solid rgba(255,45,149,.55);box-shadow:0 0 22px rgba(255,45,149,.28),inset 0 0 30px rgba(255,23,68,.06)}
+.card.v{border-color:rgba(255,23,68,.6);box-shadow:0 0 22px rgba(255,23,68,.3),inset 0 0 30px rgba(255,23,68,.06)}
+.card:before{content:"";position:absolute;top:0;left:22px;right:22px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.card small{color:var(--gold2);letter-spacing:.24em;font-size:11px}
+.card h2{font:800 32px "Playfair Display",serif;margin:8px 0 6px;color:#fff;text-shadow:0 0 14px rgba(255,45,149,.55)}
+.card p{color:var(--mut);font-size:14px;margin-bottom:18px}
+.price{font:800 44px "Playfair Display",serif;color:var(--gold2);text-shadow:0 0 16px rgba(230,195,92,.45);margin-bottom:20px}
+.price span{font:500 14px Montserrat;color:var(--mut);text-shadow:none;margin-left:6px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:18px 14px;color:#fff;font:800 14px Montserrat;letter-spacing:.14em;cursor:pointer;background:linear-gradient(135deg,var(--pink),var(--red));box-shadow:0 0 18px rgba(255,45,149,.7),0 0 42px rgba(255,23,68,.4);animation:glow 2.4s ease-in-out infinite;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.98)}
+.btn.g{background:none;border:1px solid var(--gold);color:var(--gold2);box-shadow:0 0 14px rgba(230,195,92,.35);animation:none}
+@keyframes glow{50%{box-shadow:0 0 26px rgba(255,45,149,.95),0 0 60px rgba(255,23,68,.6)}}
+@media(prefers-reduced-motion:reduce){.btn{animation:none}}
+footer{text-align:center;color:var(--mut);font-size:12px;padding:10px 18px 44px}
+footer a{color:var(--gold2);cursor:pointer;text-decoration:underline;margin:0 8px}
+.ov{position:fixed;inset:0;z-index:50;display:none;background:rgba(0,0,0,.86);align-items:flex-end;justify-content:center}
+.ov.on{display:flex}
+.sheet{width:100%;max-width:520px;max-height:94vh;overflow:auto;background:#0a0508;border:1px solid var(--pink);border-bottom:0;border-radius:24px 24px 0 0;padding:24px 20px calc(26px + env(safe-area-inset-bottom,0px));box-shadow:0 0 30px rgba(255,45,149,.4)}
+.sheet h3{font:800 26px "Playfair Display",serif;margin-bottom:12px}
+.x{float:right;background:none;border:0;color:var(--tx);font-size:28px;cursor:pointer;line-height:1}
+.row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #2a1822;color:var(--mut)}
+.row b{color:var(--tx)}
+.tot{font:800 32px "Playfair Display",serif;color:var(--gold2);text-shadow:0 0 14px rgba(230,195,92,.4)}
+.opt{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.opt button{padding:15px;border-radius:12px;background:#140a10;border:1px solid #3a2230;color:var(--tx);font:700 13px Montserrat;cursor:pointer}
+.opt button.on{border-color:var(--pink);box-shadow:0 0 14px rgba(255,45,149,.55)}
+input{width:100%;padding:16px;border-radius:12px;background:#000;border:1px solid #3a2230;color:var(--tx);font:16px Montserrat;margin:8px 0 12px}
+input:focus{outline:0;border-color:var(--pink);box-shadow:0 0 12px rgba(255,45,149,.5)}
+.note{color:var(--mut);font-size:12.5px;margin:10px 0}
+.ok{text-align:center;padding:10px 0}
+.ok i{display:grid;place-items:center;width:84px;height:84px;margin:0 auto 16px;border-radius:50%;font-style:normal;font-size:40px;color:var(--gold2);border:2px solid var(--gold);box-shadow:0 0 26px rgba(230,195,92,.6)}
+.sheet p{color:var(--mut);font-size:14px;margin-bottom:10px}
+@media(min-width:760px){.cards{grid-template-columns:1fr 1fr}.ov{align-items:center}.sheet{border-radius:24px;border-bottom:1px solid var(--pink)}}
+.sum{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px;border-radius:14px;background:#140a10;border:1px solid var(--gold);box-shadow:0 0 14px rgba(230,195,92,.25);margin-bottom:6px}
+.sum b{display:block}.sum span{color:var(--mut);font-size:13px}
+.sec{font-size:11px;letter-spacing:.22em;color:var(--gold2);margin:18px 0 6px}
+.sheet label{display:block;font-size:12.5px;color:var(--mut);margin-top:8px}
+.sheet input{margin:6px 0 4px}
+.trust{text-align:center;font-size:12.5px;color:var(--gold2);margin:12px 0 6px}
+.hl{margin:10px 0 4px;padding:16px;border-radius:14px;text-align:center;font:800 16px/1.35 Montserrat;color:#fff;background:linear-gradient(135deg,rgba(255,45,149,.28),rgba(255,23,68,.22));border:1px solid var(--pink);text-shadow:0 0 10px rgba(255,45,149,.8);box-shadow:0 0 18px rgba(255,45,149,.55)}
+.err{color:var(--red);font-size:13px;min-height:18px;margin:6px 0}
+</style>
+</head>
+<body>
+<header><div class="logo">ACESSO <b>VIP</b></div></header>
+
+<main>
+<div class="hero">
+<span class="tag">ÁREA RESERVADA</span>
+<h1>Escolha o seu <span>acesso</span></h1>
+<p>Duas opções, preço claro e pagamento simples, direto do celular.</p>
+<div class="line"></div>
+</div>
+
+<div class="cards">
+<article class="card">
+<small>OPÇÃO 1</small>
+<h2>ACESSO VIP</h2>
+<p>Entre na área reservada e receba o seu acesso depois da confirmação do pagamento.</p>
+<div class="price">R$ 13,90</div>
+<button class="btn" data-pick="vip">QUERO ACESSAR</button>
+</article>
+<article class="card v">
+<small>OPÇÃO 2</small>
+<h2>VIDEOCHAMADA</h2>
+<p>Uma conversa por videochamada de 30 minutos, com horário combinado depois do pagamento.</p>
+<div class="price">R$ 50,00<span>30 minutos</span></div>
+<button class="btn" data-pick="call">ESCOLHER VIDEOCHAMADA</button>
+</article>
+</div>
+</main>
+
+<footer>
+<a data-doc="priv">Privacidade</a><a data-doc="termos">Termos</a>
+<p style="margin-top:12px">© ACESSO VIP. Todos os direitos reservados.</p>
+</footer>
+
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+
+<script>
+const OPTS={vip:{n:"ACESSO VIP",d:"Acesso à área reservada",p:13.9},call:{n:"VIDEOCHAMADA",d:"30 minutos",p:50}};
+const brl=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+// Número do WhatsApp com país e DDD, só dígitos. Ex.: "5511999999999"
+const WHATSAPP="";
+const S={opt:null,pay:"pix",f:{nm:"",em:"",ph:""}};
+const sh=document.getElementById("sheet"),ov=document.getElementById("ov");
+function show(h){sh.innerHTML='<button class="x" data-close aria-label="Fechar">&times;</button>'+h;ov.classList.add("on")}
+function resumo(){const o=OPTS[S.opt];
+show(`<h3>Resumo da escolha</h3>
+<div class="row"><span>Serviço</span><b>${o.n}</b></div>
+<div class="row"><span>Detalhe</span><b>${o.d}</b></div>
+<div class="row"><span>Total</span><span class="tot">${brl(o.p)}</span></div>
+<p class="note">Sem taxas escondidas e sem renovação automática.</p>
+<button class="btn" data-go="checkout">IR PARA O CHECKOUT SEGURO</button>
+<button class="btn g" style="margin-top:10px" data-close>TROCAR ESCOLHA</button>`)}
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function saveF(){["nm","em","ph"].forEach(k=>{const e=document.getElementById(k);if(e)S.f[k]=e.value})}
+function checkout(msg){const o=OPTS[S.opt],f=S.f;
+show(`<h3>Finalizar compra</h3>
+<div class="sum"><div><b>${o.n}</b><span>${o.d}</span></div><div class="tot" style="font-size:26px">${brl(o.p)}</div></div>
+<div class="hl">📲 Após o pagamento, você será redirecionado para o nosso WhatsApp.</div>
+<div class="sec">1 · SEUS DADOS</div>
+<label for="nm">Nome completo</label><input id="nm" autocomplete="name" placeholder="Seu nome" value="${esc(f.nm)}">
+<label for="em">E-mail</label><input id="em" type="email" inputmode="email" autocomplete="email" placeholder="voce@email.com" value="${esc(f.em)}">
+<label for="ph">WhatsApp (com DDD)</label><input id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" value="${esc(f.ph)}">
+<div class="sec">2 · PAGAMENTO</div>
+<div class="opt" style="grid-template-columns:1fr"><button data-pay="pix" class="on">PIX</button></div>
+<p class="note">O código PIX aparece depois de tocar em pagar. A confirmação é automática.</p>
+<p class="err" id="er">${msg||""}</p>
+<button class="btn" data-go="pay">PAGAR ${brl(o.p)}</button>
+<p class="trust">🔒 Pagamento seguro · seus dados são protegidos</p>
+<p class="note" style="text-align:center">Modo demonstração: nenhuma cobrança real até conectar o gateway.</p>`)}
+async function pagar(){saveF();const f=S.f,o=OPTS[S.opt];
+if(f.nm.trim().length<3)return checkout("Informe seu nome completo.");
+if(!/^\S+@\S+\.\S+$/.test(f.em.trim()))return checkout("Informe um e-mail válido.");
+if(f.ph.replace(/\D/g,"").length<10)return checkout("Informe seu WhatsApp com DDD.");
+// PRODUÇÃO: criar a cobrança no servidor (ex.: POST /api/charge) e confirmar o pagamento só pelo webhook do gateway.
+show('<div class="ok"><p>Processando pagamento...</p></div>');
+await new Promise(r=>setTimeout(r,1300));
+const txt=encodeURIComponent(`Olá! Acabei de pagar: ${o.n} (${brl(o.p)}). Meu nome é ${f.nm.trim()}.`);
+const url=WHATSAPP?`https://wa.me/${WHATSAPP}?text=${txt}`:"";
+show(`<div class="ok"><i>✓</i><h3>Pagamento confirmado</h3>
+<p><b style="color:var(--tx)">${o.n}</b> · ${brl(o.p)}</p>
+<p>${url?"Você será redirecionado para o WhatsApp em instantes.":"Seu pedido foi registrado. Em breve entraremos em contato."}</p>
+${url?`<a class="btn" style="text-decoration:none" href="${url}" target="_blank" rel="noopener">ABRIR WHATSAPP AGORA</a>`:""}
+<button class="btn g" style="margin-top:10px" data-close>VOLTAR AO INÍCIO</button></div>`);
+if(url)setTimeout(()=>{try{location.href=url}catch(e){}},3500)}
+function doc(k){const D={priv:["Privacidade","<p>Coletamos apenas o e-mail e os dados do pagamento, para confirmar a compra e entregar o acesso. Não vendemos nem compartilhamos seus dados. Você pode pedir a exclusão deles a qualquer momento.</p>"],termos:["Termos","<p>Cada compra vale pelo item descrito, sem assinatura automática. O conteúdo é de uso pessoal e não pode ser copiado nem redistribuído. O horário da videochamada é combinado com o cliente após a confirmação do pagamento.</p>"]};
+show(`<h3>${D[k][0]}</h3>${D[k][1]}`)}
+document.addEventListener("click",e=>{const t=e.target;
+if(t.dataset.pick){S.opt=t.dataset.pick;resumo()}
+else if(t.dataset.go=="checkout")checkout();
+else if(t.dataset.go=="pay")pagar();
+else if(t.dataset.pay){saveF();S.pay=t.dataset.pay;checkout()}
+else if(t.dataset.doc)doc(t.dataset.doc);
+else if(t.hasAttribute("data-close")||t===ov)ov.classList.remove("on")});
+</script>
+</body>
+</html>
