@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -82,7 +81,7 @@ input:focus{outline:0;border-color:var(--pink);box-shadow:0 0 12px rgba(255,45,1
 <article class="card">
 <small>OPÇÃO 1</small>
 <h2>ACESSO VIP</h2>
-<p>Entre na área reservada e receba o seu acesso depois da confirmação do pagamento.</p>
+<p>Você receberá vídeos e fotos.</p>
 <div class="price">R$ 13,90</div>
 <button class="btn" data-pick="vip">QUERO ACESSAR</button>
 </article>
@@ -104,7 +103,7 @@ input:focus{outline:0;border-color:var(--pink);box-shadow:0 0 12px rgba(255,45,1
 <div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
 
 <script>
-const OPTS={vip:{n:"ACESSO VIP",d:"Acesso à área reservada",p:13.9},call:{n:"VIDEOCHAMADA",d:"30 minutos",p:50}};
+const OPTS={vip:{n:"ACESSO VIP",d:"Você receberá vídeos e fotos",p:13.9},call:{n:"VIDEOCHAMADA",d:"30 minutos",p:50}};
 const brl=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 // Número do WhatsApp com país e DDD, só dígitos. Ex.: "5511999999999"
 const WHATSAPP="";
@@ -124,7 +123,7 @@ function saveF(){["nm","em","ph"].forEach(k=>{const e=document.getElementById(k)
 function checkout(msg){const o=OPTS[S.opt],f=S.f;
 show(`<h3>Finalizar compra</h3>
 <div class="sum"><div><b>${o.n}</b><span>${o.d}</span></div><div class="tot" style="font-size:26px">${brl(o.p)}</div></div>
-<div class="hl">📲 Após o pagamento, você será redirecionado para o nosso WhatsApp.</div>
+<div class="hl">${S.opt=="vip"?"📲 Após o pagamento você receberá vídeos e fotos.":"📲 Após o pagamento, você será redirecionado para o nosso WhatsApp para combinar o horário."}</div>
 <div class="sec">1 · SEUS DADOS</div>
 <label for="nm">Nome completo</label><input id="nm" autocomplete="name" placeholder="Seu nome" value="${esc(f.nm)}">
 <label for="em">E-mail</label><input id="em" type="email" inputmode="email" autocomplete="email" placeholder="voce@email.com" value="${esc(f.em)}">
