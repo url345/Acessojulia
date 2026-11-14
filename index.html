@@ -92,7 +92,7 @@ input:focus{outline:0;border-color:var(--pink);box-shadow:0 0 12px rgba(255,45,1
 <article class="card v">
 <small>OPÇÃO 2</small>
 <h2>VIDEOCHAMADA</h2>
-<p>Uma conversa por videochamada de 30 minutos, com horário combinado depois do pagamento.</p>
+<p>Videochamada de 30 minutos, discreta e privada. O dia e o horário são combinados em um Telegram privado depois do pagamento.</p>
 <div class="price">R$ 50,00<span>30 minutos</span></div>
 <button class="btn" data-pick="call">ESCOLHER VIDEOCHAMADA</button>
 </article>
@@ -109,8 +109,8 @@ input:focus{outline:0;border-color:var(--pink);box-shadow:0 0 12px rgba(255,45,1
 <script>
 const OPTS={vip:{n:"ACESSO VIP",d:"Você receberá vídeos e fotos",p:13.9},call:{n:"VIDEOCHAMADA",d:"30 minutos",p:50}};
 const brl=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-// Número do WhatsApp com país e DDD, só dígitos. Ex.: "5511999999999"
-const WHATSAPP="";
+// Link do seu Telegram privado, usado só na VIDEOCHAMADA. Ex.: "https://t.me/seuusuario"
+const TELEGRAM="";
 const API_URL="/api/charge";
 const S={opt:null,pay:"pix",f:{nm:"",em:"",ph:""}};
 const sh=document.getElementById("sheet"),ov=document.getElementById("ov");
@@ -128,11 +128,11 @@ function saveF(){["nm","em","ph"].forEach(k=>{const e=document.getElementById(k)
 function checkout(msg){const o=OPTS[S.opt],f=S.f;
 show(`<h3>Finalizar compra</h3>
 <div class="sum"><div><b>${o.n}</b><span>${o.d}</span></div><div class="tot" style="font-size:26px">${brl(o.p)}</div></div>
-<div class="hl">${S.opt=="vip"?"📲 Após o pagamento você receberá vídeos e fotos.":"📲 Após o pagamento, você será redirecionado para o nosso WhatsApp para combinar o horário."}</div>
+<div class="hl">${S.opt=="vip"?"📲 Após o pagamento você receberá vídeos e fotos.":"📲 Após o pagamento, você será redirecionado para o nosso Telegram privado, só nós dois, para combinar o dia, o horário e o momento da ligação. Tudo discreto e privado."}</div>
 <div class="sec">1 · SEUS DADOS</div>
 <label for="nm">Nome completo</label><input id="nm" autocomplete="name" placeholder="Seu nome" value="${esc(f.nm)}">
 <label for="em">E-mail</label><input id="em" type="email" inputmode="email" autocomplete="email" placeholder="voce@email.com" value="${esc(f.em)}">
-<label for="ph">WhatsApp (com DDD)</label><input id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" value="${esc(f.ph)}">
+<label for="ph">Celular (com DDD)</label><input id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-9999" value="${esc(f.ph)}">
 <div class="sec">2 · PAGAMENTO</div>
 <div class="opt" style="grid-template-columns:1fr"><button data-pay="pix" class="on">PIX</button></div>
 <p class="note">O código PIX aparece depois de tocar em pagar. A confirmação é automática.</p>
@@ -143,7 +143,7 @@ show(`<h3>Finalizar compra</h3>
 async function pagar(){saveF();const f=S.f;
 if(f.nm.trim().length<3)return checkout("Informe seu nome completo.");
 if(!/^\S+@\S+\.\S+$/.test(f.em.trim()))return checkout("Informe um e-mail válido.");
-if(f.ph.replace(/\D/g,"").length<10)return checkout("Informe seu WhatsApp com DDD.");
+if(f.ph.replace(/\D/g,"").length<10)return checkout("Informe seu celular com DDD.");
 show('<div class="ok"><p>Gerando seu PIX...</p></div>');
 let d;
 try{const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({product:S.opt})});
@@ -156,19 +156,18 @@ show(`<h3>Pague com PIX</h3>
 <div class="code">${esc(d.pix)}</div>
 <button class="btn" data-go="copy" id="cp">COPIAR CÓDIGO PIX</button>
 <p class="note" style="text-align:center;margin-top:14px">Depois de pagar, toque no botão abaixo.</p>
-<button class="btn g" data-go="paid">JÁ PAGUEI · IR PARA O WHATSAPP</button>`);
+<button class="btn g" data-go="paid">${S.opt=="call"?"JÁ PAGUEI · IR PARA O TELEGRAM":"JÁ PAGUEI"}</button>`);
 if(!d.qrImage&&window.QRCode){try{new QRCode(document.getElementById("qr"),{text:d.pix,width:220,height:220,correctLevel:QRCode.CorrectLevel.L})}catch(e){}}}
 async function copiar(){const b=document.getElementById("cp");
 try{await navigator.clipboard.writeText(S.pix);b.textContent="CÓDIGO COPIADO ✓"}catch(e){b.textContent="SELECIONE E COPIE O CÓDIGO"}}
 function zap(){const f=S.f,o=OPTS[S.opt];
-const txt=encodeURIComponent(`Olá! Fiz o pagamento via PIX: ${o.n} (${brl(o.p)}). Meu nome é ${f.nm.trim()}.`);
-const url=WHATSAPP?`https://wa.me/${WHATSAPP}?text=${txt}`:"";
-show(`<div class="ok"><i>✓</i><h3>Quase lá!</h3>
-<p><b style="color:var(--tx)">${o.n}</b> · ${brl(o.p)}</p>
-<p>${url?"Vamos conferir seu pagamento e liberar tudo pelo WhatsApp. Você será redirecionado em instantes.":"Seu pedido foi registrado. Em breve entraremos em contato."}</p>
-${url?`<a class="btn" style="text-decoration:none" href="${url}" target="_blank" rel="noopener">ABRIR WHATSAPP AGORA</a>`:""}
-<button class="btn g" style="margin-top:10px" data-close>VOLTAR AO INÍCIO</button></div>`);
-if(url)setTimeout(()=>{try{location.href=url}catch(e){}},3000)}
+const head=`<div class="ok"><i>✓</i><h3>Quase lá!</h3><p><b style="color:var(--tx)">${o.n}</b> · ${brl(o.p)}</p>`;
+const back='<button class="btn g" style="margin-top:10px" data-close>VOLTAR AO INÍCIO</button></div>';
+if(S.opt=="call"){const url=TELEGRAM;
+show(head+`<p>${url?"Você será redirecionado para o nosso Telegram privado, só nós dois, para combinar o dia, o horário e o momento da ligação.":"Seu pedido foi registrado. Em breve entraremos em contato."}</p>
+${url?`<a class="btn" style="text-decoration:none" href="${url}" target="_blank" rel="noopener">ABRIR TELEGRAM AGORA</a>`:""}`+back);
+if(url)setTimeout(()=>{try{location.href=url}catch(e){}},3000);return}
+show(head+`<p>Vamos conferir o seu pagamento e enviar seus vídeos e fotos para <b style="color:var(--tx)">${esc(f.em.trim())}</b>.</p>`+back)}
 function doc(k){const D={priv:["Privacidade","<p>Coletamos apenas o e-mail e os dados do pagamento, para confirmar a compra e entregar o acesso. Não vendemos nem compartilhamos seus dados. Você pode pedir a exclusão deles a qualquer momento.</p>"],termos:["Termos","<p>Cada compra vale pelo item descrito, sem assinatura automática. O conteúdo é de uso pessoal e não pode ser copiado nem redistribuído. O horário da videochamada é combinado com o cliente após a confirmação do pagamento.</p>"]};
 show(`<h3>${D[k][0]}</h3>${D[k][1]}`)}
 document.addEventListener("click",e=>{const t=e.target;
