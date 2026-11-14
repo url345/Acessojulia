@@ -64,7 +64,11 @@ input:focus{outline:0;border-color:var(--pink);box-shadow:0 0 12px rgba(255,45,1
 .trust{text-align:center;font-size:12.5px;color:var(--gold2);margin:12px 0 6px}
 .hl{margin:10px 0 4px;padding:16px;border-radius:14px;text-align:center;font:800 16px/1.35 Montserrat;color:#fff;background:linear-gradient(135deg,rgba(255,45,149,.28),rgba(255,23,68,.22));border:1px solid var(--pink);text-shadow:0 0 10px rgba(255,45,149,.8);box-shadow:0 0 18px rgba(255,45,149,.55)}
 .err{color:var(--red);font-size:13px;min-height:18px;margin:6px 0}
+.qr{background:#fff;padding:12px;border-radius:14px;width:fit-content;min-width:244px;min-height:244px;margin:14px auto;display:grid;place-items:center}
+.qr img{display:block;max-width:100%}
+.code{word-break:break-all;font:12px/1.4 monospace;color:var(--gold2);background:#140a10;border:1px dashed var(--gold);border-radius:12px;padding:12px;margin:0 0 14px;max-height:96px;overflow:auto}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <header><div class="logo">ACESSO <b>VIP</b></div></header>
@@ -107,6 +111,7 @@ const OPTS={vip:{n:"ACESSO VIP",d:"Você receberá vídeos e fotos",p:13.9},call
 const brl=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 // Número do WhatsApp com país e DDD, só dígitos. Ex.: "5511999999999"
 const WHATSAPP="";
+const API_URL="/api/charge";
 const S={opt:null,pay:"pix",f:{nm:"",em:"",ph:""}};
 const sh=document.getElementById("sheet"),ov=document.getElementById("ov");
 function show(h){sh.innerHTML='<button class="x" data-close aria-label="Fechar">&times;</button>'+h;ov.classList.add("on")}
@@ -135,27 +140,43 @@ show(`<h3>Finalizar compra</h3>
 <button class="btn" data-go="pay">PAGAR ${brl(o.p)}</button>
 <p class="trust">🔒 Pagamento seguro · seus dados são protegidos</p>
 <p class="note" style="text-align:center">Modo demonstração: nenhuma cobrança real até conectar o gateway.</p>`)}
-async function pagar(){saveF();const f=S.f,o=OPTS[S.opt];
+async function pagar(){saveF();const f=S.f;
 if(f.nm.trim().length<3)return checkout("Informe seu nome completo.");
 if(!/^\S+@\S+\.\S+$/.test(f.em.trim()))return checkout("Informe um e-mail válido.");
 if(f.ph.replace(/\D/g,"").length<10)return checkout("Informe seu WhatsApp com DDD.");
-// PRODUÇÃO: criar a cobrança no servidor (ex.: POST /api/charge) e confirmar o pagamento só pelo webhook do gateway.
-show('<div class="ok"><p>Processando pagamento...</p></div>');
-await new Promise(r=>setTimeout(r,1300));
-const txt=encodeURIComponent(`Olá! Acabei de pagar: ${o.n} (${brl(o.p)}). Meu nome é ${f.nm.trim()}.`);
+show('<div class="ok"><p>Gerando seu PIX...</p></div>');
+let d;
+try{const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({product:S.opt})});
+d=await r.json();if(!r.ok||!d.pix)throw 0}catch(e){return checkout("Não foi possível gerar o PIX agora. Tente novamente.")}
+pixTela(d)}
+function pixTela(d){const o=OPTS[S.opt];S.pix=d.pix;
+show(`<h3>Pague com PIX</h3>
+<p>Valor: <b style="color:var(--gold2)">${brl(o.p)}</b>. No app do seu banco, escolha PIX e pague com o QR Code ou com o código copia e cola.</p>
+<div class="qr" id="qr">${d.qrImage?`<img src="${esc(d.qrImage)}" alt="QR Code PIX" width="220" height="220">`:""}</div>
+<div class="code">${esc(d.pix)}</div>
+<button class="btn" data-go="copy" id="cp">COPIAR CÓDIGO PIX</button>
+<p class="note" style="text-align:center;margin-top:14px">Depois de pagar, toque no botão abaixo.</p>
+<button class="btn g" data-go="paid">JÁ PAGUEI · IR PARA O WHATSAPP</button>`);
+if(!d.qrImage&&window.QRCode){try{new QRCode(document.getElementById("qr"),{text:d.pix,width:220,height:220,correctLevel:QRCode.CorrectLevel.L})}catch(e){}}}
+async function copiar(){const b=document.getElementById("cp");
+try{await navigator.clipboard.writeText(S.pix);b.textContent="CÓDIGO COPIADO ✓"}catch(e){b.textContent="SELECIONE E COPIE O CÓDIGO"}}
+function zap(){const f=S.f,o=OPTS[S.opt];
+const txt=encodeURIComponent(`Olá! Fiz o pagamento via PIX: ${o.n} (${brl(o.p)}). Meu nome é ${f.nm.trim()}.`);
 const url=WHATSAPP?`https://wa.me/${WHATSAPP}?text=${txt}`:"";
-show(`<div class="ok"><i>✓</i><h3>Pagamento confirmado</h3>
+show(`<div class="ok"><i>✓</i><h3>Quase lá!</h3>
 <p><b style="color:var(--tx)">${o.n}</b> · ${brl(o.p)}</p>
-<p>${url?"Você será redirecionado para o WhatsApp em instantes.":"Seu pedido foi registrado. Em breve entraremos em contato."}</p>
+<p>${url?"Vamos conferir seu pagamento e liberar tudo pelo WhatsApp. Você será redirecionado em instantes.":"Seu pedido foi registrado. Em breve entraremos em contato."}</p>
 ${url?`<a class="btn" style="text-decoration:none" href="${url}" target="_blank" rel="noopener">ABRIR WHATSAPP AGORA</a>`:""}
 <button class="btn g" style="margin-top:10px" data-close>VOLTAR AO INÍCIO</button></div>`);
-if(url)setTimeout(()=>{try{location.href=url}catch(e){}},3500)}
+if(url)setTimeout(()=>{try{location.href=url}catch(e){}},3000)}
 function doc(k){const D={priv:["Privacidade","<p>Coletamos apenas o e-mail e os dados do pagamento, para confirmar a compra e entregar o acesso. Não vendemos nem compartilhamos seus dados. Você pode pedir a exclusão deles a qualquer momento.</p>"],termos:["Termos","<p>Cada compra vale pelo item descrito, sem assinatura automática. O conteúdo é de uso pessoal e não pode ser copiado nem redistribuído. O horário da videochamada é combinado com o cliente após a confirmação do pagamento.</p>"]};
 show(`<h3>${D[k][0]}</h3>${D[k][1]}`)}
 document.addEventListener("click",e=>{const t=e.target;
 if(t.dataset.pick){S.opt=t.dataset.pick;resumo()}
 else if(t.dataset.go=="checkout")checkout();
 else if(t.dataset.go=="pay")pagar();
+else if(t.dataset.go=="copy")copiar();
+else if(t.dataset.go=="paid")zap();
 else if(t.dataset.pay){saveF();S.pay=t.dataset.pay;checkout()}
 else if(t.dataset.doc)doc(t.dataset.doc);
 else if(t.hasAttribute("data-close")||t===ov)ov.classList.remove("on")});
